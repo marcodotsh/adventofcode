@@ -28,7 +28,7 @@ void print(Ptr_node l){
 	print(l->next);
 }
 
-int nways(Ptr_node l);
+int nways(Ptr_node l, int visitedtwice);
 
 int main(void)
 {
@@ -120,11 +120,36 @@ int nways(Ptr_node l, int visitedtwice) {
 		return 1;
 	int i, res;
 	res = 0;
-	if(l->data>='a'&&l->data<='z' && l->data!='s') {
-		if(!visitedtwice) {
-			visitedtwice = 1;
-		}
+	if(l->data=='s') {
 		l->isVisited = 1;
+		for(i=0;i<l->nLinks;i++) {
+			if(!(l->link[i]->isVisited)) {
+				res += nways(l->link[i], visitedtwice);
+			}
+		}
+	}
+	else if(l->data>='a'&&l->data<='z') {
+		if(!visitedtwice) {
+			for(i=0;i<l->nLinks;i++) {
+				if(!(l->link[i]->isVisited)) {
+					res += nways(l->link[i], 1);
+				}
+			}
+			l->isVisited = 1;
+			for(i=0;i<l->nLinks;i++) {
+				if(!(l->link[i]->isVisited)) {
+					res += nways(l->link[i], 0);
+				}
+			}
+		}
+		else {
+			l->isVisited = 1;
+			for(i=0;i<l->nLinks;i++) {
+				if(!(l->link[i]->isVisited)) {
+					res += nways(l->link[i], visitedtwice);
+				}
+			}
+		}
 	}
 	else {
 		for(i=0;i<l->nLinks;i++) {
